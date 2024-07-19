@@ -11,11 +11,31 @@ const HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   inject: 'body',
 });
 
+const babelLoaderConfiguration = {
+  test: /\.jsx?$/,
+  include: [
+    path.resolve(appDirectory, 'index.web.js'),
+    path.resolve(appDirectory, 'App.web.js'),
+    path.resolve(appDirectory, 'src'),
+  ],
+  exclude: /node_modules\/(?!()\/).*/,
+  use: {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      presets: ['@babel/preset-react'],
+    },
+  },
+};
+
 module.exports = {
   entry: path.join(appDirectory, 'index.web.js'),
   output: {
     filename: 'bundle.js', // 번들링이 된 파일의 이름
     path: path.join(appDirectory, '/dist'), // 번들링이 된 파일이 생성될 경로
+  },
+  module: {
+    rules: [babelLoaderConfiguration], // babel 설정 적용
   },
   plugins: [HTMLWebpackPluginConfig],
   devServer: {
